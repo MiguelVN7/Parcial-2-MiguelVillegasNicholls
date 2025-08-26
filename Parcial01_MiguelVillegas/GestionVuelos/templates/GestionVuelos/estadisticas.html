@@ -5,103 +5,22 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h2 class="mb-4">Estadísticas de Vuelos</h2>
-            
-            <div class="row">
-                <!-- Total de Vuelos -->
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <h5>Total de Vuelos</h5>
-                        </div>
-                        <div class="card-body">
-                            <h3>{{ total_vuelos }}</h3>
-                            <p class="card-text">Vuelos registrados</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Vuelos Nacionales -->
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <h5>Vuelos Nacionales</h5>
-                        </div>
-                        <div class="card-body">
-                            <h3>{{ vuelos_nacionales }}</h3>
-                            <p class="card-text">Vuelos dentro del país</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Vuelos Internacionales -->
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <h5>Vuelos Internacionales</h5>
-                        </div>
-                        <div class="card-body">
-                            <h3>{{ vuelos_internacionales }}</h3>
-                            <p class="card-text">Vuelos fuera del país</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Precio Promedio Nacional -->
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <h5>Precio Promedio Nacional</h5>
-                        </div>
-                        <div class="card-body">
-                            <h3>
-                                {% if precio_promedio_nacional > 0 %}
-                                    ${{ precio_promedio_nacional|floatformat:0 }}
-                                {% else %}
-                                    No disponible
-                                {% endif %}
-                            </h3>
-                            <p class="card-text">Promedio vuelos nacionales</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Resumen adicional -->
-            {% if total_vuelos > 0 %}
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Resumen</h5>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>Distribución de vuelos:</strong></p>
-                            <ul>
-                                <li>Vuelos Nacionales: {{ vuelos_nacionales }} ({{ vuelos_nacionales|div:total_vuelos|mul:100|floatformat:1 }}%)</li>
-                                <li>Vuelos Internacionales: {{ vuelos_internacionales }} ({{ vuelos_internacionales|div:total_vuelos|mul:100|floatformat:1 }}%)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <h2>Estadísticas de Vuelos</h2>
+    
+    <ul>
+        <li><strong>Vuelos Nacionales:</strong> {{ vuelos_nacionales }}</li>
+        <li><strong>Vuelos Internacionales:</strong> {{ vuelos_internacionales }}</li>
+        <li><strong>Precio Promedio Nacional:</strong> 
+            {% if precio_promedio_nacional > 0 %}
+                ${{ precio_promedio_nacional|floatformat:0 }}
+            {% else %}
+                No disponible
             {% endif %}
-            
-            <!-- Botones de navegación -->
-            <div class="mt-4 text-center">
-                <a href="{% url 'listar' %}" class="btn btn-primary me-2">
-                    Ver Lista de Vuelos
-                </a>
-                <a href="{% url 'registrar' %}" class="btn btn-primary me-2">
-                    Registrar Vuelo
-                </a>
-                <a href="{% url 'home' %}" class="btn btn-secondary">
-                    Volver al Inicio
-                </a>
-            </div>
-        </div>
-    </div>
+        </li>
+    </ul>
+    
+    <p>
+        <a href="{% url 'home' %}">Volver al Inicio</a>
+    </p>
 </div>
 {% endblock %}

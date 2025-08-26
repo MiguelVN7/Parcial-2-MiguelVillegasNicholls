@@ -91,6 +91,14 @@ class EstadisticasView(TemplateView):
         vuelos_internacionales = Vuelo.objects.filter(tipo__iexact='internacional').count()
         total_vuelos = vuelos_nacionales + vuelos_internacionales
         
+        # Calcular porcentajes
+        if total_vuelos > 0:
+            porcentaje_nacionales = round((vuelos_nacionales / total_vuelos) * 100, 1)
+            porcentaje_internacionales = round((vuelos_internacionales / total_vuelos) * 100, 1)
+        else:
+            porcentaje_nacionales = 0
+            porcentaje_internacionales = 0
+        
         # Calcular precio promedio de vuelos nacionales
         vuelos_nacionales_query = Vuelo.objects.filter(tipo__iexact='nacional')
         if vuelos_nacionales_query.exists():
@@ -106,6 +114,8 @@ class EstadisticasView(TemplateView):
             'vuelos_nacionales': vuelos_nacionales,
             'vuelos_internacionales': vuelos_internacionales,
             'total_vuelos': total_vuelos,
+            'porcentaje_nacionales': porcentaje_nacionales,
+            'porcentaje_internacionales': porcentaje_internacionales,
             'precio_promedio_nacional': precio_promedio_nacional,
         })
         
