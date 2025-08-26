@@ -46,7 +46,7 @@ class VueloForm(forms.ModelForm):
                 raise ValidationError("El nombre no puede tener más de 255 caracteres.")
         return nombre
 
-# Product Create Page
+
 class RegistrarVueloView(TemplateView):
     template_name = 'GestionVuelos/registrar.html'
 
@@ -61,7 +61,7 @@ class RegistrarVueloView(TemplateView):
         form = VueloForm(request.POST)
         if form.is_valid():
             vuelo = form.save()
-            return redirect('home')  # Redirigir al home después de guardar
+            return redirect('home')  
         else:
             viewData = {}
             viewData["title"] = "Registrar Vuelo"
@@ -86,20 +86,11 @@ class EstadisticasView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Contar vuelos nacionales e internacionales
         vuelos_nacionales = Vuelo.objects.filter(tipo__iexact='nacional').count()
         vuelos_internacionales = Vuelo.objects.filter(tipo__iexact='internacional').count()
         total_vuelos = vuelos_nacionales + vuelos_internacionales
         
-        # Calcular porcentajes
-        if total_vuelos > 0:
-            porcentaje_nacionales = round((vuelos_nacionales / total_vuelos) * 100, 1)
-            porcentaje_internacionales = round((vuelos_internacionales / total_vuelos) * 100, 1)
-        else:
-            porcentaje_nacionales = 0
-            porcentaje_internacionales = 0
         
-        # Calcular precio promedio de vuelos nacionales
         vuelos_nacionales_query = Vuelo.objects.filter(tipo__iexact='nacional')
         if vuelos_nacionales_query.exists():
             precio_promedio_nacional = vuelos_nacionales_query.aggregate(
@@ -114,8 +105,6 @@ class EstadisticasView(TemplateView):
             'vuelos_nacionales': vuelos_nacionales,
             'vuelos_internacionales': vuelos_internacionales,
             'total_vuelos': total_vuelos,
-            'porcentaje_nacionales': porcentaje_nacionales,
-            'porcentaje_internacionales': porcentaje_internacionales,
             'precio_promedio_nacional': precio_promedio_nacional,
         })
         
