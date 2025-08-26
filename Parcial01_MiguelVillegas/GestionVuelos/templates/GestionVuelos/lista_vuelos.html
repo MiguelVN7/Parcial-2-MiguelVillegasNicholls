@@ -1,0 +1,56 @@
+{% extends 'GestionVuelos/base.html' %}
+
+{% block title %} {{title}} {% endblock %}
+{% block header_title %} {{subtitle}} {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Lista de Vuelos Registrados</h2>
+            
+            {% if vuelos %}
+                <div class="row">
+                    {% for vuelo in vuelos %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">{{ vuelo.nombre }}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <strong>Tipo:</strong> {{ vuelo.tipo|capfirst }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Precio:</strong> ${{ vuelo.precio|floatformat:0 }}
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    ID: {{ vuelo.id }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <h4>No hay vuelos registrados</h4>
+                    <p>Aún no se han registrado vuelos en el sistema.</p>
+                    <a href="{% url 'registrar' %}" class="btn btn-primary">
+                        Registrar Primer Vuelo
+                    </a>
+                </div>
+            {% endif %}
+            
+            <div class="mt-4 text-center">
+                <a href="{% url 'registrar' %}" class="btn btn-primary me-2">
+                    Nuevo Vuelo
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">
+                    Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

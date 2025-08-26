@@ -17,11 +17,33 @@ class VueloForm(forms.ModelForm):
         model = Vuelo
         fields = ['nombre', 'tipo', 'precio']
 
-    def validarTipo(self):
-        tipo = self.cleaned_data.get('price')
-        if tipo.lower() != 'nacional' or 'internacional': 
-            raise ValidationError("El tipo debe ser nacional o internacional.")
+    def clean_tipo(self):
+        tipo = self.cleaned_data.get('tipo')
+        if tipo:
+            tipo_lower = tipo.lower().strip()
+            if tipo_lower not in ['nacional', 'internacional']:
+                raise ValidationError("El tipo debe ser 'nacional' o 'internacional'.")
+            return tipo_lower.capitalize() 
         return tipo
+
+    def clean_precio(self):
+        precio = self.cleaned_data.get('precio')
+        if precio is not None:
+            if precio <= 0:
+                raise ValidationError("El precio debe ser mayor a 0.")
+            if precio > 999999999:  
+                raise ValidationError("El precio no puede ser mayor a 999,999,999.")
+        return precio
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        if nombre:
+            nombre = nombre.strip()
+            if len(nombre) < 2:
+                raise ValidationError("El nombre debe tener al menos 2 caracteres.")
+            if len(nombre) > 255:
+                raise ValidationError("El nombre no puede tener más de 255 caracteres.")
+        return nombre
 
 # Product Create Page
 class RegistrarVueloView(TemplateView):
@@ -44,3 +66,15 @@ class RegistrarVueloView(TemplateView):
             viewData["title"] = "Registrar Vuelo"
             viewData["form"] = form
             return render(request, self.template_name, viewData)
+        
+
+class VueloListView(ListView):
+    model = Vuelo
+    template_name = 'GestionVuelos/lista_vuelos.html'
+    context_object_name = 'vuelos'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Vuelos Registrados - Alcaldía Rionegro'
+        context['subtitle'] = 'Lista de Vuelos'
+        return context

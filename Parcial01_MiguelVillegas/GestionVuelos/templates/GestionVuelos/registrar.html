@@ -20,9 +20,30 @@
                     {% endif %}
                     <form method="POST" action="{% url 'registrar' %}">
                         {% csrf_token %}
-                        <input type="text" class="form-control mb-2" placeholder="Ingrese el nombre" name="nombre" value="{{ form.data.nombre }}" />
-                        <input type="text" class="form-control mb-2" placeholder="Ingrese el tipo (nacional/internacional)" name="tipo" value="{{ form.data.tipo }}" />
-                        <input type="number" class="form-control mb-2" placeholder="Ingrese el precio" name="precio" value="{{ form.data.precio }}" />
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Vuelo</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" 
+                                   placeholder="Ingrese el nombre del vuelo" 
+                                   value="{{ form.data.nombre }}" required />
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo de Vuelo</label>
+                            <select class="form-select" id="tipo" name="tipo" required>
+                                <option value="">Seleccione el tipo de vuelo</option>
+                                <option value="nacional" {% if form.data.tipo == 'nacional' %}selected{% endif %}>Nacional</option>
+                                <option value="internacional" {% if form.data.tipo == 'internacional' %}selected{% endif %}>Internacional</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="precio" class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="precio" name="precio" 
+                                   placeholder="Ingrese el precio del vuelo" 
+                                   value="{{ form.data.precio }}" 
+                                   min="1" max="999999999" required />
+                        </div>
+                        
                         <input type="submit" class="btn btn-primary" value="Registrar Vuelo" />
                     </form>
                 </div>
