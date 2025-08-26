@@ -4,6 +4,7 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django import forms
+from django.db import models
 from .models import Vuelo
 from django.core.exceptions import ValidationError
 
@@ -77,4 +78,35 @@ class VueloListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Vuelos Registrados - Alcaldía Rionegro'
         context['subtitle'] = 'Lista de Vuelos'
+        return context
+    
+class EstadisticasView(TemplateView):
+    template_name = 'GestionVuelos/estadisticas.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Contar vuelos nacionales e internacionales
+        vuelos_nacionales = Vuelo.objects.filter(tipo__iexact='nacional').count()
+        vuelos_internacionales = Vuelo.objects.filter(tipo__iexact='internacional').count()
+        total_vuelos = vuelos_nacionales + vuelos_internacionales
+        
+        # Calcular precio promedio de vuelos nacionales
+        vuelos_nacionales_query = Vuelo.objects.filter(tipo__iexact='nacional')
+        if vuelos_nacionales_query.exists():
+            precio_promedio_nacional = vuelos_nacionales_query.aggregate(
+                promedio=models.Avg('precio')
+            )['promedio']
+        else:
+            precio_promedio_nacional = 0
+        
+        context.update({
+            'title': 'Estadísticas de Vuelos',
+            'subtitle': 'Resumen de Vuelos Registrados',
+            'vuelos_nacionales': vuelos_nacionales,
+            'vuelos_internacionales': vuelos_internacionales,
+            'total_vuelos': total_vuelos,
+            'precio_promedio_nacional': precio_promedio_nacional,
+        })
+        
         return context
